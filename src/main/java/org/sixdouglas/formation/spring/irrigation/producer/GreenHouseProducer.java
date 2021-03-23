@@ -88,11 +88,45 @@ public final class GreenHouseProducer {
     }
 
     private static Mono<Drop> buildDrop(GreenHouse greenHouse, Row row, Dropper dropper) {
+        //TODO make this function return a Mono.error if the Dropper is Broken
+
         return Mono.just(Drop.builder()
                 .greenHouseId(greenHouse.getId())
                 .rowId(row.getId())
                 .dropperId(dropper.getId())
                 .instant(Instant.now())
                 .build());
+    }
+
+
+    public static Mono<GreenHouse> getDropper(int greenHouseId, int rowId, int dropperId) {
+
+        final Optional<GreenHouse> greenHouseOptional = greenHouses.stream()
+                .filter(greenHouse1 -> greenHouse1.getId() == greenHouseId)
+                .findFirst();
+
+        if (greenHouseOptional.isEmpty()) {
+            return Mono.empty();
+        }
+
+        GreenHouse greenHouse = greenHouseOptional.get();
+        final Optional<Row> rowOptional = greenHouse.getRows().stream().filter(row -> row.getId() == rowId).findFirst();
+        if (rowOptional.isEmpty()) {
+            return Mono.empty();
+        }
+
+        Row row = rowOptional.get();
+        final Optional<Dropper> dropperOptional = row.getDroppers().stream().filter(dropper -> dropper.getId() == dropperId).findFirst();
+        if(dropperOptional.isEmpty()){
+            return Mono.empty();
+        }
+
+        return getJust(greenHouse, row, dropperOptional.get());
+    }
+
+    private static Mono<GreenHouse> getJust(GreenHouse house, Row row, Dropper dropper) {
+        //TODO Build a new Greenhouse that will contain a newly built Row that will contain a newly built Dropper
+        //TODO    using the data of the given objects
+        return Mono.empty();
     }
 }
