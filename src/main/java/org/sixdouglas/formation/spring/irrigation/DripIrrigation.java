@@ -1,7 +1,10 @@
 package org.sixdouglas.formation.spring.irrigation;
 
+import org.sixdouglas.formation.spring.irrigation.producer.GreenHouseProducer;
+
 import java.time.Duration;
 import java.time.Instant;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,5 +26,10 @@ public class DripIrrigation {
                                             .instant(Instant.now())
                                             .build());
         return flux;
+    }
+
+    public Flux<Drop> followDropper(int greenHouseId, int rowId, int dropperId) {
+        //TODO use the GreenHouseProducer.getDrops() function as producer, but filter the output to fit the given criteria
+        return null;
     }
 }
