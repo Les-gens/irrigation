@@ -1,9 +1,6 @@
 package org.sixdouglas.formation.spring.irrigation.producer;
 
-import org.sixdouglas.formation.spring.irrigation.Drop;
-import org.sixdouglas.formation.spring.irrigation.Dropper;
-import org.sixdouglas.formation.spring.irrigation.GreenHouse;
-import org.sixdouglas.formation.spring.irrigation.Row;
+import org.sixdouglas.formation.spring.irrigation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -97,8 +94,7 @@ public final class GreenHouseProducer {
     private static Mono<Drop> buildDrop(GreenHouse greenHouse, Row row, Dropper dropper) {
         //TODO make this function return a Mono.error if the Dropper is Broken
 
-        return Mono.just(Drop.builder()
-                .greenHouseId(greenHouse.getId())
+        return dropper.isBroken() ? Mono.error(new BrokenDropperException()) : Mono.just(Drop.builder().greenHouseId(greenHouse.getId())
                 .rowId(row.getId())
                 .dropperId(dropper.getId())
                 .instant(Instant.now())
