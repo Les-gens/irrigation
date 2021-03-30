@@ -134,6 +134,17 @@ public final class GreenHouseProducer {
     private static Mono<GreenHouse> getJust(GreenHouse house, Row row, Dropper dropper) {
         //TODO Build a new Greenhouse that will contain a newly built Row that will contain a newly built Dropper
         //TODO    using the data of the given objects
-        return Mono.empty();
+        return Mono.just( GreenHouse.builder().id(house.getId())
+                            .name(house.getName())
+                            .row(Row .builder()
+                                    .id(row.getId())
+                            .name(row.getName())
+                            .dropper(Dropper .builder()
+                            .id(dropper.getId())
+                            .name(dropper.getName())
+                            .broken(dropper.isBroken())
+                            .build())
+                            .build())
+        .build());
     }
 }
