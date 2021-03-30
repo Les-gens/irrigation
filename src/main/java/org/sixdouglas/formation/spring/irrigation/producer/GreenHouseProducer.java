@@ -76,14 +76,21 @@ public final class GreenHouseProducer {
 
 
     public static Flux<Drop> getDrops() {
-        Flux<Drop> dropsFlux = Flux.empty();
-
         //TODO go through all Greenhouses
         //TODO    go through all Row
         //TODO       go through all Dropper
         //TODO          Create a flux that will emit a Drop every 10 millis seconds using the buildDrop() function
         //TODO          then merge this new flux int the dropsFlux
+        Flux<Drop> dropsFlux = Flux.empty();
 
+        for (GreenHouse greenhouses: GreenHouseProducer.greenHouses ) {
+            for (Row rows : greenhouses.getRows() ) {
+                for (Dropper droppers: rows.getDroppers() ) {
+                    Flux<Drop> flux = Flux.interval(Duration.ofMillis(10)).map(receivedLong -> buildDrop(greenhouses, rows, droppers).block());
+                    dropsFlux = Flux.merge(dropsFlux, flux);
+            }
+        }
+    }
         return dropsFlux;
     }
 
